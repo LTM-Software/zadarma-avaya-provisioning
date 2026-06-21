@@ -55,6 +55,12 @@ Write-Host "Building AvayaGateway.exe..."
     --distpath $PyInstallerDist `
     --workpath $PyInstallerWork `
     --specpath $BuildRoot `
+    --hidden-import functools `
+    --hidden-import html `
+    --hidden-import http.server `
+    --hidden-import socketserver `
+    --hidden-import urllib.parse `
+    --hidden-import xml.etree.ElementTree `
     --add-data "$ProjectRoot\avaya-shim\avaya_shim.py;avaya-shim" `
     "$PSScriptRoot\avaya_gateway.py"
 
