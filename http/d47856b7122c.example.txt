@@ -1,0 +1,10 @@
+############################################################
+## Device-specific login for Avaya MAC D4:78:56:B7:12:2C
+## Copy this to d47856b7122c.txt and fill local secrets.
+## The real d47856b7122c.txt is ignored by git.
+############################################################
+
+SET FORCE_SIP_USERNAME "373316-100"
+SET FORCE_SIP_EXTENSION "373316-100"
+SET FORCE_SIP_PASSWORD "replace-me"
+

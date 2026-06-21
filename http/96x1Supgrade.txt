@@ -1,0 +1,9 @@
+############################################################
+## Avaya 96x1 SIP bootstrap
+## Loads the SIP settings file from this HTTP directory.
+############################################################
+
+GOTO GETSET
+
+# GETSET
+GET 46xxsettings.txt

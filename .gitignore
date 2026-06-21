@@ -1,0 +1,21 @@
+.DS_Store
+__pycache__/
+*.pyc
+
+# Runtime logs/state
+logs/*
+!logs/.gitkeep
+work/
+build/
+dist/
+*.log
+*.err
+*.pid
+*.exe
+
+# Local secrets. These files contain the SIP username/password.
+http/d47856b7122c.txt
+http/D47856B7122C.txt
+
+# Local overrides
+.env

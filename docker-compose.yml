@@ -1,0 +1,33 @@
+services:
+  avaya-shim:
+    image: python:3.12-alpine
+    container_name: avaya-shim
+    command: ["python", "/app/avaya_shim.py"]
+    ports:
+      - "80:80/tcp"
+    environment:
+      HTTP_ROOT: /srv/http
+      ENABLE_HTTP: "1"
+      ENABLE_SIP: "0"
+      AVAYA_EXTENSION: ${AVAYA_EXTENSION:-373316-100}
+      AVAYA_DOMAIN: ${AVAYA_DOMAIN:-pbx.zadarma.com}
+      SIP_ADVERTISE_HOST: ${SIP_ADVERTISE_HOST:-192.168.80.10}
+      SIP_ADVERTISE_PORT: ${SIP_ADVERTISE_PORT:-5060}
+      AVAYA_LOGO_LABEL: ${AVAYA_LOGO_LABEL:-LTM}
+      AVAYA_LOGO_URL: ${AVAYA_LOGO_URL:-http://192.168.80.10/ltm-logo-232x140.jpg}
+    volumes:
+      - ./http:/srv/http:ro
+      - ./avaya-shim/avaya_shim.py:/app/avaya_shim.py:ro
+    restart: unless-stopped
+
+  avaya-syslog:
+    image: python:3.12-alpine
+    container_name: avaya-syslog
+    command: ["python", "-u", "/app/syslog_server.py"]
+    ports:
+      - "514:514/udp"
+    volumes:
+      - ./syslog/syslog_server.py:/app/syslog_server.py:ro
+      - ./logs:/logs
+    restart: unless-stopped
+
