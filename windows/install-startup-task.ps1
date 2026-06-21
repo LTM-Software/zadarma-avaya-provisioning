@@ -103,6 +103,7 @@ if (-not $NoCopy) {
     Copy-Item $ExeSource $InstallDir -Force
     Copy-Item (Join-Path $SourceDir "http") $InstallDir -Recurse -Force
     Copy-Item (Join-Path $SourceDir "install-startup-task.ps1") $InstallDir -Force
+    Copy-Item (Join-Path $SourceDir "install-startup-task.cmd") $InstallDir -Force
     Copy-Item (Join-Path $SourceDir "uninstall-startup-task.ps1") $InstallDir -Force
     Copy-Item (Join-Path $SourceDir "README-Windows.md") $InstallDir -Force
 }

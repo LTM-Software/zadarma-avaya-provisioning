@@ -1,8 +1,29 @@
 param(
-    [string]$Python = "py -3"
+    [string]$Python = ""
 )
 
 $ErrorActionPreference = "Stop"
+
+function Resolve-Python {
+    param([string]$RequestedPython)
+
+    if (-not [string]::IsNullOrWhiteSpace($RequestedPython)) {
+        return $RequestedPython
+    }
+
+    $candidates = @("py -3", "python", "python3")
+    foreach ($candidate in $candidates) {
+        try {
+            $null = Invoke-Expression "$candidate --version 2>&1"
+            if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq $null) {
+                return $candidate
+            }
+        } catch {
+        }
+    }
+
+    throw "Python 3 was not found. Install it with: winget install -e --id Python.Python.3.12"
+}
 
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $BuildRoot = Join-Path $ProjectRoot "build\windows"
@@ -12,10 +33,11 @@ $PyInstallerWork = Join-Path $BuildRoot "pyinstaller-work"
 $OutputDir = Join-Path $ProjectRoot "dist\AvayaGateway"
 
 New-Item -ItemType Directory -Force -Path $BuildRoot | Out-Null
+$PythonCommand = Resolve-Python $Python
 
 if (-not (Test-Path $VenvDir)) {
     Write-Host "Creating Python virtualenv..."
-    Invoke-Expression "$Python -m venv `"$VenvDir`""
+    Invoke-Expression "$PythonCommand -m venv `"$VenvDir`""
 }
 
 $PythonExe = Join-Path $VenvDir "Scripts\python.exe"
@@ -40,7 +62,9 @@ Copy-Item (Join-Path $PyInstallerDist "AvayaGateway.exe") $OutputDir
 Copy-Item (Join-Path $ProjectRoot "http") $OutputDir -Recurse
 Copy-Item (Join-Path $ProjectRoot ".env.example") $OutputDir
 Copy-Item (Join-Path $PSScriptRoot "install-startup-task.ps1") $OutputDir
+Copy-Item (Join-Path $PSScriptRoot "install-startup-task.cmd") $OutputDir
 Copy-Item (Join-Path $PSScriptRoot "uninstall-startup-task.ps1") $OutputDir
+Copy-Item (Join-Path $PSScriptRoot "run-debug.cmd") $OutputDir
 Copy-Item (Join-Path $PSScriptRoot "README-Windows.md") $OutputDir
 New-Item -ItemType Directory -Force -Path (Join-Path $OutputDir "logs") | Out-Null
 
